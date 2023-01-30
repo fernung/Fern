@@ -16,6 +16,7 @@ namespace Fern.Engine.Clients
         protected string _title;
         protected bool _allowMinimize;
         protected bool _allowMaximize;
+        protected bool _closeOnEscKey;
 
         public int Width
         {
@@ -39,19 +40,31 @@ namespace Fern.Engine.Clients
             _aspect;
         public string Title =>
             _title;
-        public bool AllowMinimize =>
-            _allowMinimize;
-        public bool AllowMaximize =>
-            _allowMaximize;
+        public bool AllowMinimize
+        {
+            get => _allowMinimize;
+            set => _allowMinimize = value;
+        }
+        public bool AllowMaximize
+        {
+            get => _allowMaximize;
+            set => _allowMaximize = value;
+        }
+        public bool CloseOnEscKey
+        {
+            get => _closeOnEscKey;
+            set => _closeOnEscKey = value;
+        }
 
-        public ClientSettings(int width, int height, string title = "", bool allowMinimize = true, bool allowMaximize = true)
+        public ClientSettings(int width, int height, string title = "")
         {
             _width = width;
             _height = height;
             _aspect = (double)width / height;
             _title = title;
-            _allowMinimize = allowMinimize;
-            _allowMaximize = allowMaximize;
+            _allowMinimize = true;
+            _allowMaximize = true;
+            _closeOnEscKey = true;
         }
     }
 }

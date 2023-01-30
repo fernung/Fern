@@ -1,5 +1,6 @@
 using Fern.Engine.Clients;
 using Fern.Engine.Screens;
+using Fern.WF.Demos.RandomShapes;
 
 namespace Fern.WF
 {
@@ -9,8 +10,14 @@ namespace Fern.WF
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            using var client = new Client();
-            client.Run(new EmptyScreen(client));
+            var settings = new ClientSettings(800, 600, "Fern Client")
+            {
+                AllowMinimize = false,
+                AllowMaximize = true,
+                CloseOnEscKey = false
+            };
+            using var client = new Client(settings);
+            client.Run(new MainMenuScreen(client));
         }
     }
 }

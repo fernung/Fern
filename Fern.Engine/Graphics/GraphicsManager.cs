@@ -84,6 +84,14 @@ namespace Fern.Engine.Graphics
             using var brush = new SolidBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
             graphics.DrawString(text, font, brush, x, y);
         }
+        public void DrawTextCentered(string text, int x, int y, Pixel color, int fontSize = 12, string fontFamily = "Calibri")
+        {
+            using var graphics = System.Drawing.Graphics.FromImage(_buffer.Bitmap);
+            using var font = new Font(fontFamily, fontSize);
+            using var brush = new SolidBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
+            var textSize = graphics.MeasureString(text, font);
+            graphics.DrawString(text, font, brush, x - (textSize.Width * 0.5f), y - (textSize.Height * 0.5f));
+        }
 
         public void DrawLine(int x0, int y0, int x1, int y1, Pixel color)
         {
@@ -142,16 +150,27 @@ namespace Fern.Engine.Graphics
         }
         public void DrawRectangle(int x0, int y0, int width, int height, Pixel color)
         {
-            int index, x = x0, y = y0;
+            int index, x, y;
             int x1 = x0 + width;
             int y1 = y0 + height;
-            for (; x <= x1; x++)
-                for (; y <= y1; y++)
-                {
-                    index = x + y * _buffer.Width;
-                    if (index < _buffer.Length)
-                        _buffer[index] = color;
-                }
+            for (x = x0; x <= x1; x++)
+            {
+                y = y0;
+                index = x + y * _buffer.Width;
+                _buffer[index] = color;
+                y = y1;
+                index = x + y * _buffer.Width;
+                _buffer[index] = color;
+            }
+            for (y = y0; y <= y1; y++)
+            {
+                x = x0;
+                index = x + y * _buffer.Width;
+                _buffer[index] = color;
+                x = x1;
+                index = x + y * _buffer.Width;
+                _buffer[index] = color;
+            }
         }
         public void DrawCircle(int x, int y, int radius, Pixel color)
         {
@@ -243,10 +262,14 @@ namespace Fern.Engine.Graphics
 
         private static bool IsInsideTriangle(int pX, int pY, int x0, int y0, int x1, int y1, int x2, int y2)
         {
+            float w0_denom = ((y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2));
+            float w1_denom = ((y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2));
+            if(w0_denom == 0) w0_denom = 1;
+            if(w1_denom == 0) w1_denom = 1;
             float w0 = ((y1 - y2) * (pX - x2) + (x2 - x1) * (pY - y2)) /
-                       ((y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2));
+                       w0_denom;
             float w1 = ((y2 - y0) * (pX - x2) + (x0 - x2) * (pY - y2)) /
-                       ((y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2));
+                       w1_denom;
             float w2 = 1 - w0 - w1;
             return w0 >= 0 && w1 >= 0 && w2 >= 0;
         }

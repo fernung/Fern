@@ -35,7 +35,7 @@ namespace Fern.Engine.Input
 
         public void Update()
         {
-            _location = _client.PointToClient(Control.MousePosition);
+            _location = _client?.PointToClient(Control.MousePosition) ?? Point.Empty;
         }
 
         private void OnMouseMove(object? sender, MouseEventArgs e)

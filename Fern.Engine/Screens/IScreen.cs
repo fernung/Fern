@@ -21,10 +21,10 @@ namespace Fern.Engine.Screens
             _client = client;
         }
 
-        public abstract void Initialize();
-        public abstract void LoadContent();
-        public abstract void UnloadContent();
-        public abstract void Update();
-        public abstract void Draw();
+        public virtual void Initialize() { }
+        public virtual void LoadContent() { }
+        public virtual void UnloadContent() { }
+        public virtual void Update() { }
+        public virtual void Draw() { }
     }
 }
